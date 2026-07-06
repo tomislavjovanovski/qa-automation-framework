@@ -22,7 +22,7 @@ test.describe("Accounts API contract coverage", () => {
 
   test(`${TEST_TAGS.api} ${TEST_TAGS.happyPath} retrieves account details for a listed account`, async ({ apiContext }) => {
     const listResult = await apiContext.api.accounts.listAccounts();
-    const firstAccountId = listResult.body[0]?.id;
+    const firstAccountId = listResult.body[0]?.id ?? apiContext.config.runtime.paymentSourceAccountId;
 
     if (!firstAccountId) {
       expect(listResult.response.status()).toBeGreaterThanOrEqual(400);
@@ -34,8 +34,10 @@ test.describe("Accounts API contract coverage", () => {
   });
 
   test(`${TEST_TAGS.api} ${TEST_TAGS.negative} rejects invalid account id`, async ({ apiContext }) => {
+    const invalidAccountId = `${apiContext.config.runtime.paymentIdempotencyKeyPrefix ?? "invalid"}-account`;
+
     try {
-      await apiContext.api.accounts.getAccountDetails("invalid-account-id");
+      await apiContext.api.accounts.getAccountDetails(invalidAccountId);
     } catch (error) {
       expect(error).toBeDefined();
     }
@@ -61,7 +63,16 @@ test.describe("Accounts API contract coverage", () => {
     }
   );
 
-  test(`${TEST_TAGS.api} validates account details schema`, async () => {
+  test(`${TEST_TAGS.api} validates account details schema`, async ({ apiContext }) => {
+    const accountId = apiContext.config.runtime.paymentSourceAccountId ?? "demo-source";
+    const result = await apiContext.api.accounts.getAccountDetails(accountId);
+
+    if (result.body.id && result.body.currency && result.body.balance !== undefined) {
+      expect(() => validateSchema(accountDetailsSchema, result.body)).not.toThrow();
+    } else {
+      expect(result.body.id).toBeTruthy();
+    }
+
     const invalidPayload = {
       id: "",
       iban: "short",

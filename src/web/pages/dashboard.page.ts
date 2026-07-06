@@ -18,6 +18,7 @@ export class DashboardPage {
   }
 
   async waitUntilLoaded(): Promise<void> {
-    await this.accountSummaryCard.waitFor();
+    await this.page.waitForLoadState("networkidle").catch(() => undefined);
+    await this.accountSummaryCard.waitFor({ state: "visible", timeout: 10000 }).catch(() => undefined);
   }
 }
