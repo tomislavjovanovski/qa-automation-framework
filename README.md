@@ -21,22 +21,22 @@ Playwright + TypeScript framework for API and Web testing with shared infrastruc
 - Faker
 - GitHub Actions
 
-## Structure
+## Structure and Folder Responsibilities
 
 ```text
 .
-|-- .github/workflows/
+|-- .github/workflows/        # CI pipeline
 |-- config/
-|   |-- environments/
-|   `-- playwright/
+|   |-- environments/         # region and environment profiles
+|   `-- playwright/           # Playwright config helpers
 |-- src/
-|   |-- api/
-|   |-- core/
-|   |-- shared/
-|   `-- web/
+|   |-- api/                  # API facades, request builders, schemas, types
+|   |-- core/                 # config loading, auth, HTTP client, DI
+|   |-- shared/               # shared fixtures, constants, factories, utilities
+|   `-- web/                  # page objects, components, actions, flows
 |-- tests/
-|   |-- api/
-|   `-- web/
+|   |-- api/                  # API test scenarios
+|   `-- web/                  # Web test scenarios
 |-- .env.example
 |-- package.json
 |-- playwright.api.config.ts
@@ -45,16 +45,13 @@ Playwright + TypeScript framework for API and Web testing with shared infrastruc
 `-- tsconfig.json
 ```
 
-## Folders
+The repository is organized so that:
 
-- `src/core`: config loading, auth, HTTP client, DI/composition root
-- `src/api`: API facades, request builders, schemas, domain types
-- `src/web`: page objects, components, actions, flows
-- `src/shared`: fixtures, constants, factories, utilities
-- `tests/api`: API specs only
-- `tests/web`: Web specs only
-- `config/environments`: environment and region profile examples
-- `.github/workflows`: CI pipeline
+- `tests/` contains the actual test scenarios.
+- `src/api/` holds API implementation details.
+- `src/web/` holds browser automation implementation details.
+- `src/shared/` provides shared infrastructure used by both API and Web tests.
+- `src/core/` contains the framework backbone such as config, auth, and HTTP handling.
 
 ## How Tests Use the Source Tree
 
