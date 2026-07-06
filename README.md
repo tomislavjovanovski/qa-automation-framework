@@ -98,9 +98,6 @@ If the chosen website does not expose a usable public API, the architecture stil
 
 That means the framework contract stays unchanged even if the concrete API provider changes.
 
-## Documentation
-
-- Architecture deep dive: [docs/architecture-overview.md](/home/tomche/qa-automation-framework/docs/architecture-overview.md)
 
 ## Assumptions
 
