@@ -2,7 +2,6 @@ import { z } from "zod";
 
 import type { RuntimeEnv } from "../types/runtime-env";
 
-const booleanFromString = z.string().transform((value) => value.toLowerCase() === "true");
 const workersSchema = z.union([z.string(), z.coerce.number().int().positive()]);
 
 export const runtimeEnvSchema: z.ZodType<RuntimeEnv> = z.object({
@@ -18,7 +17,7 @@ export const runtimeEnvSchema: z.ZodType<RuntimeEnv> = z.object({
   apiClientSecret: z.string().optional(),
   webUsername: z.string().optional(),
   webPassword: z.string().optional(),
-  headless: booleanFromString,
+  headless: z.coerce.boolean(),
   workers: workersSchema,
   ciWorkers: workersSchema,
   retries: z.coerce.number().int().min(0),
