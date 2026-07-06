@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import type { RuntimeEnv } from "../types/runtime-env";
 
-const workersSchema = z.union([z.string(), z.coerce.number().int().positive()]);
+const workersSchema = z.preprocess(
+  (value) => (typeof value === "string" && /^\d+$/.test(value) ? Number(value) : value),
+  z.union([z.string().regex(/^\d+%$/), z.coerce.number().int().positive()])
+);
 
 export const runtimeEnvSchema: z.ZodType<RuntimeEnv> = z.object({
   executionEnv: z.string().min(1),
