@@ -62,19 +62,19 @@ jobs:
         region: ${{ fromJson(needs.discover-matrix.outputs.regions) }}
     name: ${{ matrix.suite }}-${{ matrix.region }}
     env:
-      EXECUTION_ENV: ci
-      REGION: ${{ matrix.region }}
-      API_AUTH_MODE: none
-      HEADLESS: "true"
-      WORKERS: 2
-      CI_WORKERS: 2
-      RETRIES: 1
-      TEST_TIMEOUT_MS: 60000
-      EXPECT_TIMEOUT_MS: 10000
-      NAVIGATION_TIMEOUT_MS: 30000
-      TRACE_MODE: on-first-retry
-      SCREENSHOT_MODE: only-on-failure
-      VIDEO_MODE: retain-on-failure
+      EXECUTION_ENV: ci # Tells the runtime config loader to use the CI environment profile.
+      REGION: ${{ matrix.region }} # Region selected by the matrix for region-aware test data.
+      API_AUTH_MODE: none # Public/demo setup does not require API auth.
+      HEADLESS: "true" # Browser tests run headlessly in CI.
+      WORKERS: 2 # Local-style worker count used when CI is not set.
+      CI_WORKERS: 2 # Worker count used by Playwright when CI=true.
+      RETRIES: 1 # Keep retries low for CI stability.
+      TEST_TIMEOUT_MS: 60000 # Global test timeout.
+      EXPECT_TIMEOUT_MS: 10000 # Assertion timeout.
+      NAVIGATION_TIMEOUT_MS: 30000 # Page navigation timeout.
+      TRACE_MODE: on-first-retry # Collect traces only when needed.
+      SCREENSHOT_MODE: only-on-failure # Avoid unnecessary artifacts.
+      VIDEO_MODE: retain-on-failure # Keep video only for failed runs.
     steps:
       - uses: actions/checkout@v4
 

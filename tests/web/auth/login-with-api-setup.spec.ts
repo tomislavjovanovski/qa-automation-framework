@@ -3,7 +3,7 @@ import { TEST_TAGS } from "../../../src/shared/constants/test-tags";
 
 // Web specs live in tests/web and describe the user journey.
 // The shared fixture injects a webContext that is built from the browser/page layer in src/web/.
-test.describe.skip("Retail login journey with API orchestration", () => {
+test.describe("Retail login journey with API orchestration", () => {
   test(
     `${TEST_TAGS.web} ${TEST_TAGS.happyPath} authenticates user after API setup`,
     async ({ webContext }) => {

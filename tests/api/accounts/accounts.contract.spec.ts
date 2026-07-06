@@ -3,7 +3,7 @@ import { TEST_TAGS } from "../../../src/shared/constants/test-tags";
 
 // API specs live in tests/api and should stay focused on scenario intent.
 // The shared fixture provides an apiContext object created from src/core + src/api.
-test.describe.skip("Accounts API contract coverage", () => {
+test.describe("Accounts API contract coverage", () => {
   test(`${TEST_TAGS.api} ${TEST_TAGS.happyPath} retrieves account details`, async ({ apiContext }) => {
     // apiContext is injected by the shared fixture from src/shared/fixtures/api.fixture.ts.
     // In a real implementation, this would be used to call an API facade from src/api/.

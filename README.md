@@ -70,20 +70,13 @@ test.describe("Retail login journey with API orchestration", () => {
 });
 ```
 
-### What to look for when onboarding
-
-1. Start in `tests/` to understand the business goal of the scenario.
-2. Follow the imports to see which reusable layer is being used.
-3. If the test uses UI behavior, inspect `src/web/`.
-4. If the test uses API behavior, inspect `src/api/`.
-5. If it needs shared setup or data, inspect `src/shared/`.
-
 ## Run Locally
 
 1. Install dependencies with `npm ci`
-2. A default `.env` is already included and points to `https://demo.firefly-iii.org`
-3. Change `REGION` or URLs only if needed
-4. Run one of the following:
+2. Install the required Playwright browser binaries with `npx playwright install`
+3. Make sure a local `.env` file exists and points to the desired base URLs and region
+4. Change `REGION` or URLs only if needed
+5. Run one of the following:
 
 - `npm run test:api`
 - `npm run test:web`
@@ -91,23 +84,19 @@ test.describe("Retail login journey with API orchestration", () => {
 
 ## Configuration
 
-- `BASE_URL`: web application URL
-- `API_URL`: API base URL
+The main runtime settings are read from the local [.env](.env) file. The example file [.env.example](.env.example) is only a reference template for the expected variables.
+
+- `BASE_URL`: web application URL used by browser tests
+- `API_URL`: API base URL used by API tests
 - `REGION`: active region such as `eu`, `us`, or `uk`
-- `WEB_PATH_PREFIX` and `API_PATH_PREFIX`: optional subpaths
-- `WEB_USERNAME` and `WEB_PASSWORD`: shared web credentials
-- `API_CLIENT_ID` and `API_CLIENT_SECRET`: shared API credentials
-
-The config loader supports layering:
-
-- `.env`
-- `config/environments/<executionEnv>.env`
-- `config/environments/<region>.env`
-- `config/environments/<executionEnv>.<region>.env`
+- `WEB_PATH_PREFIX` and `API_PATH_PREFIX`: optional subpaths if the app is hosted under a prefix
+- `WEB_USERNAME` and `WEB_PASSWORD`: shared web credentials when needed
+- `API_CLIENT_ID` and `API_CLIENT_SECRET`: shared API credentials when auth is required
+- `HEADLESS`, `WORKERS`, `CI_WORKERS`, `RETRIES`, and the timeout variables control execution behavior locally and in CI
 
 CI or shell environment variables still win over file-based values.
 
-The default `.env` and example files are prefilled with the Firefly demo host to make startup easier.
+The default [.env](.env) file is prefilled with the Firefly demo host to make startup easier.
 
 ## Design Notes
 
@@ -128,10 +117,3 @@ If the selected website has no public API, the framework shape still works:
 - Banking APIs may require multiple auth strategies across markets
 - UI and API test teams should share factories, config, and utilities without coupling their test suites
 - Reporting and richer test implementation would come in the next iteration
-
-## Future Improvements
-
-- Implement real public API coverage and real Web flows
-- Add happy path, negative, and idempotency scenarios end-to-end
-- Add reporting enrichment and better test data support
-- Extend the same structure for mobile later

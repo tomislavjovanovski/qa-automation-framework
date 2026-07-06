@@ -11,6 +11,7 @@ export function createPlaywrightConfig(layer: TestLayer): PlaywrightTestConfig {
     fullyParallel: true,
     forbidOnly: Boolean(process.env.CI),
     retries: appConfig.runtime.retries,
+    // CI uses a smaller worker count; local runs can use the larger configured value.
     workers: process.env.CI ? appConfig.runtime.ciWorkers : appConfig.runtime.workers,
     timeout: appConfig.runtime.testTimeoutMs,
     expect: {
