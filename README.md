@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a Playwright + TypeScript automation framework created as part of the Quipu technical assignment.
+This project is a Playwright + TypeScript automation framework created as part of the technical assignment.
 
 It supports API and Web testing with shared infrastructure while allowing both layers to run independently. The framework is configuration-driven and can be extended to support additional regions without changing the test implementation.
 
