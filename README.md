@@ -1,8 +1,17 @@
 # QA Automation Framework
 
-Structure-first iteration of an enterprise-grade Playwright + TypeScript automation framework for banking and financial platforms. This scaffold is intentionally focused on architecture, dependency flow, execution separation, and extension seams rather than feature-complete test implementation.
+Playwright + TypeScript framework for API and Web testing with shared infrastructure, independent execution, and environment-driven region switching.
 
-## Technology Stack
+## What This Framework Solves
+
+- API and Web are runnable separately or together
+- Shared infrastructure across API and Web layers
+- Switching region does not require test code changes
+- Configuration is centralized through `.env` and profile files
+- API clients, fixtures, page objects, and flows are structured for reuse
+- CI can run `api`, `web`, or `all`
+
+## Stack
 
 - Playwright
 - TypeScript
@@ -12,28 +21,14 @@ Structure-first iteration of an enterprise-grade Playwright + TypeScript automat
 - Faker
 - GitHub Actions
 
-## Current Iteration Scope
-
-- Separate execution entry points for API, Web, and All tests
-- Shared infrastructure across API and Web layers
-- Centralized runtime and region configuration
-- URL resolution through `BASE_URL`, `API_URL`, and `REGION`
-- Region onboarding through data files instead of code changes
-- API client, authentication, request builder, and facade skeletons
-- Web page object, component object, flow, and action skeletons
-- Custom fixtures and lightweight dependency injection through a composition root
-- CI workflow with API-only, Web-only, and All-tests execution paths
-- Architecture documentation for future implementation phases
-
-## Folder Architecture
+## Structure
 
 ```text
 .
 |-- .github/workflows/
 |-- config/
-|   |-- playwright/
-|   `-- regions/
-|-- docs/
+|   |-- environments/
+|   `-- playwright/
 |-- src/
 |   |-- api/
 |   |-- core/
@@ -50,66 +45,76 @@ Structure-first iteration of an enterprise-grade Playwright + TypeScript automat
 `-- tsconfig.json
 ```
 
-## How To Run
+## Folders
+
+- `src/core`: config loading, auth, HTTP client, DI/composition root
+- `src/api`: API facades, request builders, schemas, domain types
+- `src/web`: page objects, components, actions, flows
+- `src/shared`: fixtures, constants, factories, utilities
+- `tests/api`: API specs only
+- `tests/web`: Web specs only
+- `config/environments`: environment and region profile examples
+- `.github/workflows`: CI pipeline
+
+## Run Locally
 
 1. Install dependencies with `npm ci`
 2. Copy `.env.example` to `.env`
-3. Set `BASE_URL`, `API_URL`, and `REGION=eu` or another supported region code
+3. Set `BASE_URL`, `API_URL`, and `REGION`
 4. Run one of the following:
 
 - `npm run test:api`
 - `npm run test:web`
 - `npm run test:all`
 
-## Configuration Model
+## Configuration
 
-- `BASE_URL`: web application host, provided at runtime through `.env`, CI variables, or secrets
-- `API_URL`: API host, provided at runtime through `.env`, CI variables, or secrets
-- `REGION`: selects the region descriptor under `config/regions`
+- `BASE_URL`: web application URL
+- `API_URL`: API base URL
+- `REGION`: active region such as `eu`, `us`, or `uk`
+- `WEB_PATH_PREFIX` and `API_PATH_PREFIX`: optional subpaths
+- `WEB_USERNAME` and `WEB_PASSWORD`: shared web credentials
+- `API_CLIENT_ID` and `API_CLIENT_SECRET`: shared API credentials
 
-Region files such as `eu.json`, `us.json`, and `uk.json` are still the right design, but they should describe regional behavior only:
+The config loader supports layering:
 
-- locale, currency, and timezone
-- auth environment-variable mappings
-- optional path prefixes
-- default region headers
-- user credential key mappings
+- `.env`
+- `config/environments/<executionEnv>.env`
+- `config/environments/<region>.env`
+- `config/environments/<executionEnv>.<region>.env`
 
-They should not hardcode concrete application or API hostnames.
+CI or shell environment variables still win over file-based values.
 
 ## Add A New Region
 
-1. Add a new file under `config/regions`, for example `ca.json`
-2. Keep the JSON shape aligned with the region schema
-3. Provide the environment variables referenced by that region file
-4. Provide `BASE_URL`, `API_URL`, and `REGION=ca`
+1. Copy one of the files under `config/environments/*.env.example`
+2. Create a new profile such as `config/environments/ca.env`
+3. Set `REGION=ca` and provide URLs and credentials
+4. Run the same tests with no code changes
 
-No framework code changes are required because region loading is file-driven. The CI workflow can also consume region-specific `BASE_URL_<region>` and `API_URL_<region>` repository variables without changing the pipeline definition.
+## Design Notes
 
-## Target Application Strategy
+- Tests, page objects, and API modules do not read `process.env` directly
+- Playwright config is split into `api`, `web`, and `all`
+- Web tests can reuse API modules through shared fixtures
+- The current repo is a structure-first iteration, so specs are still skeletons
 
-For future implementation, `https://demo.firefly-iii.org` is a reasonable candidate for the Web layer as long as it is passed only through `BASE_URL` and never hardcoded into source. I would not bake that URL into the framework itself.
+If the selected website has no public API, the framework shape still works:
 
-If the chosen website does not expose a usable public API, the architecture still stands:
-
-- keep the Web layer pointed at the public site through `BASE_URL`
-- keep the API layer pointed at a public REST service, mock service, or internal demo backend through `API_URL`
-- keep Web tests reusing API facades for setup or verification wherever the selected backend allows it
-
-That means the framework contract stays unchanged even if the concrete API provider changes.
-
+- Web stays pointed at `BASE_URL`
+- API stays pointed at `API_URL`
+- only the concrete API target changes, not the framework structure
 
 ## Assumptions
 
 - Region differences are configuration concerns, not test logic concerns
 - Banking APIs may require multiple auth strategies across markets
 - UI and API test teams should share factories, config, and utilities without coupling their test suites
-- Enterprise adoption will require layered reporting, secrets management, and service virtualization in later iterations
+- Reporting and richer test implementation would come in the next iteration
 
 ## Future Improvements
 
-- Implement real API modules and production-ready schema coverage
-- Add domain-specific test data builders for customers, accounts, cards, and payments
-- Introduce environment-aware secret providers for vault-backed authentication
-- Add reporting enrichment, observability hooks, and trace correlation IDs
-- Plug mobile automation into the same composition root and config model
+- Implement real public API coverage and real Web flows
+- Add happy path, negative, and idempotency scenarios end-to-end
+- Add reporting enrichment and better test data support
+- Extend the same structure for mobile later

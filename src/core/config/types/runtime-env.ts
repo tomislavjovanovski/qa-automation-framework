@@ -3,8 +3,14 @@ export interface RuntimeEnv {
   region: string;
   baseUrl: string;
   apiUrl: string;
+  webPathPrefix: string;
+  apiPathPrefix: string;
   apiAuthMode: "none" | "static-token" | "client-credentials";
   apiAuthToken?: string;
+  apiClientId?: string;
+  apiClientSecret?: string;
+  webUsername?: string;
+  webPassword?: string;
   headless: boolean;
   workers: number | string;
   ciWorkers: number | string;

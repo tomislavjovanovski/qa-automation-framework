@@ -3,21 +3,15 @@ import type { ClientCredentialsTokenProvider } from "./client-credentials.strate
 
 export class EnvironmentTokenProvider implements ClientCredentialsTokenProvider {
   constructor(
-    private readonly clientIdEnvKey: string,
-    private readonly clientSecretEnvKey: string
+    private readonly clientId: string,
+    private readonly clientSecret: string
   ) {}
 
   async getAccessToken(): Promise<string> {
-    const clientId = process.env[this.clientIdEnvKey];
-    const clientSecret = process.env[this.clientSecretEnvKey];
-
-    if (!clientId || !clientSecret) {
-      throw new ConfigurationError(
-        `Missing client credentials in environment variables "${this.clientIdEnvKey}" or "${this.clientSecretEnvKey}".`
-      );
+    if (!this.clientId || !this.clientSecret) {
+      throw new ConfigurationError("Missing API client credentials in centralized runtime configuration.");
     }
 
-    return Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+    return Buffer.from(`${this.clientId}:${this.clientSecret}`).toString("base64");
   }
 }
-

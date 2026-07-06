@@ -40,14 +40,11 @@ export function createPlaywrightConfig(layer: TestLayer): PlaywrightTestConfig {
 
 function buildApiProject(): Project {
   return {
-    name: `${appConfig.region.code}-api`,
+    name: `${appConfig.runtime.region}-api`,
     testDir: "./tests/api",
     use: {
       baseURL: appConfig.services.api.baseUrl,
-      extraHTTPHeaders: {
-        ...appConfig.services.api.defaultHeaders,
-        "x-test-region": appConfig.region.code
-      },
+      extraHTTPHeaders: appConfig.services.api.defaultHeaders,
       trace: appConfig.runtime.traceMode,
       screenshot: appConfig.runtime.screenshotMode,
       video: appConfig.runtime.videoMode
@@ -57,7 +54,7 @@ function buildApiProject(): Project {
 
 function buildWebProject(): Project {
   return {
-    name: `${appConfig.region.code}-web`,
+    name: `${appConfig.runtime.region}-web`,
     testDir: "./tests/web",
     use: {
       ...devices["Desktop Chrome"],

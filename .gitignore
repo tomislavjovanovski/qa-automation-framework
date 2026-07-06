@@ -5,5 +5,5 @@ blob-report/
 dist/
 coverage/
 .env
+config/environments/*.env
 .DS_Store
-

@@ -1,5 +1,4 @@
 import type { AppConfig } from "./types/app-config";
-import { RegionConfigLoader } from "./loaders/region-config.loader";
 import { RuntimeEnvLoader } from "./loaders/runtime-env.loader";
 import { UrlResolver } from "./url.resolver";
 
@@ -9,20 +8,20 @@ export class AppConfigFactory {
   static create(): AppConfig {
     if (!this.cachedConfig) {
       const runtime = RuntimeEnvLoader.load();
-      const region = RegionConfigLoader.load(runtime.region);
 
       this.cachedConfig = {
         runtime,
-        region,
         services: {
           web: {
-            baseUrl: UrlResolver.resolve(runtime.baseUrl, region.web.pathPrefix),
-            pathPrefix: region.web.pathPrefix ?? "/"
+            baseUrl: UrlResolver.resolve(runtime.baseUrl, runtime.webPathPrefix),
+            pathPrefix: runtime.webPathPrefix
           },
           api: {
-            baseUrl: UrlResolver.resolve(runtime.apiUrl, region.api.pathPrefix),
-            pathPrefix: region.api.pathPrefix ?? "/",
-            defaultHeaders: region.api.defaultHeaders ?? {}
+            baseUrl: UrlResolver.resolve(runtime.apiUrl, runtime.apiPathPrefix),
+            pathPrefix: runtime.apiPathPrefix,
+            defaultHeaders: {
+              "x-test-region": runtime.region
+            }
           }
         }
       };

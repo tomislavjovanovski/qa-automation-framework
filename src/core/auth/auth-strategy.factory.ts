@@ -22,17 +22,14 @@ export class AuthStrategyFactory {
       return new BearerTokenStrategy(appConfig.runtime.apiAuthToken);
     }
 
-    const { clientIdEnvKey, clientSecretEnvKey } = appConfig.region.api.auth;
-
-    if (!clientIdEnvKey || !clientSecretEnvKey) {
+    if (!appConfig.runtime.apiClientId || !appConfig.runtime.apiClientSecret) {
       throw new ConfigurationError(
-        `Region "${appConfig.region.code}" is missing client credential environment key mapping.`
+        "API_CLIENT_ID and API_CLIENT_SECRET must be provided when API_AUTH_MODE=client-credentials."
       );
     }
 
     return new ClientCredentialsStrategy(
-      new EnvironmentTokenProvider(clientIdEnvKey, clientSecretEnvKey)
+      new EnvironmentTokenProvider(appConfig.runtime.apiClientId, appConfig.runtime.apiClientSecret)
     );
   }
 }
-

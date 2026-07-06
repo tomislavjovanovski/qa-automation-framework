@@ -3,6 +3,7 @@ name: Playwright CI
 on:
   push:
     branches:
+      - master
       - main
   pull_request:
   workflow_dispatch:
@@ -45,7 +46,7 @@ jobs:
           elif [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "pull_request" ]; then
             regions_json='["eu"]'
           else
-            regions_json=$(find config/regions -maxdepth 1 -type f -name '*.json' -printf '%f\n' | sed 's/.json$//' | jq -R -s -c 'split("\n")[:-1]')
+            regions_json=$(find config/environments -maxdepth 1 -type f -name '*.env.example' -printf '%f\n' | sed 's/\.env\.example$//' | jq -R -s -c 'split("\n")[:-1]')
           fi
 
           echo "suites=${suites_json}" >> "$GITHUB_OUTPUT"

@@ -1,4 +1,3 @@
-import type { RegionConfig } from "./region-config";
 import type { RuntimeEnv } from "./runtime-env";
 
 export interface ChannelRuntimeConfig {
@@ -12,7 +11,6 @@ export interface ApiRuntimeConfig extends ChannelRuntimeConfig {
 
 export interface AppConfig {
   runtime: RuntimeEnv;
-  region: RegionConfig;
   services: {
     web: ChannelRuntimeConfig;
     api: ApiRuntimeConfig;
