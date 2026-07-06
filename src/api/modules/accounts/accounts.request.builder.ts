@@ -24,6 +24,10 @@ export class AccountsRequestBuilder {
     return this;
   }
 
+  buildListAccountsPath(): string {
+    return "/v1/accounts";
+  }
+
   buildGetAccountPath(): string {
     return `/v1/accounts/${this.accountId}`;
   }

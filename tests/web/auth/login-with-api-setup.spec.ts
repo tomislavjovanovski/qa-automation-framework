@@ -20,12 +20,14 @@ test.describe("Retail login journey with API orchestration", () => {
     }
   );
 
-  test(`${TEST_TAGS.web} ${TEST_TAGS.negative} blocks invalid credentials`, async ({ webContext }) => {
+  test(`${TEST_TAGS.web} ${TEST_TAGS.negative} blocks invalid credentials`, async ({ webContext, appConfig }) => {
+    const username = appConfig.runtime.webUsername ?? "";
+
     await webContext.web.pages.login.open();
-    await webContext.web.pages.login.signIn("invalid-user", "wrong-password");
+    await webContext.web.pages.login.signIn(username, "wrong-password");
 
     const pageText = await webContext.web.pages.login.getPageText();
-    const responseObserved = /login|sign in|sign-in|cloudflare|blocked|error/i.test(pageText);
+    const responseObserved = /invalid|incorrect|error|try again|unauthorized|login|sign in|sign-in/i.test(pageText);
 
     expect(responseObserved).toBeTruthy();
   });

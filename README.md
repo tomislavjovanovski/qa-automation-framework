@@ -87,7 +87,7 @@ test.describe("Retail login journey with API orchestration", () => {
 The main runtime settings are read from the local [.env](.env) file. It is the single source of truth for local execution and includes the comments needed to understand each setting.
 
 - `BASE_URL`: web application URL used by browser tests
-- `API_URL`: API base URL used by API tests
+- `API_URL`: API base URL used by API tests; for Firefly III this should include the `/api` prefix
 - `REGION`: active region such as `eu`, `us`, or `uk`
 - `WEB_PATH_PREFIX` and `API_PATH_PREFIX`: optional subpaths if the app is hosted under a prefix
 - `WEB_USERNAME` and `WEB_PASSWORD`: shared web credentials when needed
