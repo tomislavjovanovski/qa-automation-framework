@@ -1,19 +1,12 @@
 # QA Automation Framework
 
-A modular **Playwright + TypeScript** automation framework designed for scalable API and Web testing. The framework demonstrates enterprise-level architecture where API and Web layers are independently executable while sharing common infrastructure, configuration, and utilities.
+## Overview
 
-## Key Features
+This project is a Playwright + TypeScript automation framework created as part of the Quipu technical assignment.
 
-- Independent API and Web execution
-- Shared fixtures and infrastructure
-- Multi-region support through configuration
-- API and Web orchestration
-- Page Object Model with reusable Flows
-- Schema validation using Zod
-- Environment-driven configuration
-- GitHub Actions ready
+It supports API and Web testing with shared infrastructure while allowing both layers to run independently. The framework is configuration-driven and can be extended to support additional regions without changing the test implementation.
 
-## Tech Stack
+## Technologies
 
 - Playwright
 - TypeScript
@@ -66,38 +59,21 @@ Test Context
    └── Configuration
 ```
 
-Tests remain thin and delegate implementation to reusable Page Objects, Flows and API modules.
+Tests focus on business scenarios while implementation details are encapsulated inside Page Objects, Flows and API modules.
 
-## Design Principles
+## Shared Infrastructure
 
-- API and Web are independently runnable.
-- Shared infrastructure through fixtures.
-- Region switching is configuration-driven.
-- Tests describe business scenarios.
-- Page Objects encapsulate UI logic.
-- API modules encapsulate service communication.
-
-## API & Web Integration
-
-```text
-API → Prepare / Verify Data
-        │
-        ▼
-Web → Execute User Flow
-        │
-        ▼
-Assertions
-```
+API and Web tests run as separate Playwright projects while sharing the same configuration, fixtures, test context and utilities.
 
 ## Multi-Region Support
 
-Changing region only requires updating configuration.
+The active region is selected through configuration.
 
 ```env
 REGION=eu
 ```
 
-No test code changes are required.
+Adding a new region only requires new configuration values. Test code remains unchanged.
 
 ## Running
 
@@ -112,7 +88,7 @@ npm run test:all
 
 ## Configuration
 
-Main configuration is managed through `.env`.
+Configuration is managed through `.env`.
 
 Typical settings:
 
@@ -125,12 +101,10 @@ Typical settings:
 - WORKERS
 - RETRIES
 
-## Assignment Coverage
+## Continuous Integration
 
-- API and Web layers are independently runnable
-- Shared infrastructure
-- Multi-region support
-- Happy, Negative and Edge scenarios
-- API used for Web setup/verification
-- API schema validation
-- GitHub Actions ready
+GitHub Actions supports running:
+
+- API tests
+- Web tests
+- Complete test suite
