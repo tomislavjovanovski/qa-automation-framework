@@ -27,46 +27,23 @@ Playwright + TypeScript framework for API and Web testing with shared infrastruc
 .
 |-- .github/workflows/        # CI pipeline
 |-- config/
-|   |-- environments/         # region and environment profiles
-|   `-- playwright/           # Playwright config helpers
+|   |-- environments/         # Region and environment profiles used by the config loader
+|   `-- playwright/           # Playwright config helpers shared by api/web/all runs
 |-- src/
-|   |-- api/                  # API facades, request builders, schemas, types
-|   |-- core/                 # config loading, auth, HTTP client, DI
-|   |-- shared/               # shared fixtures, constants, factories, utilities
-|   `-- web/                  # page objects, components, actions, flows
+|   |-- api/                  # API facades, request builders, schemas, and types
+|   |-- core/                 # Framework backbone: config loading, auth, HTTP client, DI
+|   |-- shared/               # Shared fixtures, constants, factories, and utilities for both layers
+|   `-- web/                  # Page objects, components, actions, and flows for UI tests
 |-- tests/
-|   |-- api/                  # API test scenarios
-|   `-- web/                  # Web test scenarios
-|-- .env.example
-|-- package.json
-|-- playwright.api.config.ts
-|-- playwright.config.ts
-|-- playwright.web.config.ts
-`-- tsconfig.json
+|   |-- api/                  # Thin API test scenarios; describe behavior and delegate to src/api
+|   `-- web/                  # Thin Web test scenarios; describe behavior and delegate to src/web
+|-- .env.example             # Example environment configuration
+|-- package.json             # Scripts and dependencies
+|-- playwright.api.config.ts # API-only Playwright config entrypoint
+|-- playwright.config.ts     # Combined Playwright config entrypoint
+|-- playwright.web.config.ts # Web-only Playwright config entrypoint
+`-- tsconfig.json           # TypeScript compiler configuration
 ```
-
-The repository is organized so that:
-
-- `tests/` contains the actual test scenarios.
-- `src/api/` holds API implementation details.
-- `src/web/` holds browser automation implementation details.
-- `src/shared/` provides shared infrastructure used by both API and Web tests.
-- `src/core/` contains the framework backbone such as config, auth, and HTTP handling.
-
-The test files in `tests/` are intentionally thin. They describe scenarios, while the reusable logic lives under `src/`.
-
-- `tests/api/*` contains API scenarios. These tests typically import from `src/api/` for request builders and schemas, and from `src/shared/` for fixtures and test data.
-- `tests/web/*` contains Web scenarios. These tests typically import from `src/web/` for pages, components, flows, and from `src/shared/` for fixtures and shared helpers.
-- `src/core/` provides the framework plumbing such as config loading, auth setup, and HTTP client creation.
-- `src/shared/` is the shared layer used by both API and Web tests so the same fixtures, tags, and factories can be reused.
-
-A good way to think about the structure is:
-
-- `tests/` = business scenarios
-- `src/api/` = API implementation details
-- `src/web/` = browser automation implementation details
-- `src/shared/` = shared infrastructure used by both
-- `src/core/` = framework backbone
 
 ### Example: reading a typical test file
 
