@@ -59,8 +59,8 @@ Playwright + TypeScript framework for API and Web testing with shared infrastruc
 ## Run Locally
 
 1. Install dependencies with `npm ci`
-2. Copy `.env.example` to `.env`
-3. Set `BASE_URL`, `API_URL`, and `REGION`
+2. A default `.env` is already included and points to `https://demo.firefly-iii.org`
+3. Change `REGION` or URLs only if needed
 4. Run one of the following:
 
 - `npm run test:api`
@@ -84,6 +84,8 @@ The config loader supports layering:
 - `config/environments/<executionEnv>.<region>.env`
 
 CI or shell environment variables still win over file-based values.
+
+The default `.env` and example files are prefilled with the Firefly demo host to make startup easier.
 
 ## Add A New Region
 

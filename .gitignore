@@ -4,6 +4,6 @@ test-results/
 blob-report/
 dist/
 coverage/
-.env
+.env.local
 config/environments/*.env
 .DS_Store

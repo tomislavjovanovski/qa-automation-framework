@@ -63,8 +63,6 @@ jobs:
     name: ${{ matrix.suite }}-${{ matrix.region }}
     env:
       EXECUTION_ENV: ci
-      BASE_URL: ${{ vars[format('BASE_URL_{0}', matrix.region)] || vars.BASE_URL }}
-      API_URL: ${{ vars[format('API_URL_{0}', matrix.region)] || vars.API_URL }}
       REGION: ${{ matrix.region }}
       API_AUTH_MODE: none
       HEADLESS: "true"
