@@ -40,30 +40,30 @@ It supports API and Web testing with shared infrastructure while allowing both l
 `-- tsconfig.json           # TypeScript compiler configuration
 ```
 
-
 ## Architecture
 
 ```text
-Tests
-   │
-   ▼
-Fixtures
-   │
-   ▼
-Test Context
-   │
-   ├── API Modules
-   ├── Web Pages
-   ├── Flows
-   ├── Factories
-   └── Configuration
+                 Tests
+                    │
+               Fixtures
+                    │
+                    ▼
+            TestContextFactory
+                    │
+         ┌──────────┴──────────┐
+         │                     │
+     API Context         Web Context
+         │                     │
+ Configuration,         shared API Context
+ API Modules,           + Web Pages / Flows
+ Factories
 ```
 
-Tests focus on business scenarios while implementation details are encapsulated inside Page Objects, Flows and API modules.
+Tests stay focused on business scenarios, while fixtures provide `apiContext` and `webContext` through `apiTest` and `webTest`. `TestContextFactory` creates those contexts, assembling shared configuration from `AppConfigFactory`, API facades, factories, and the Web layer abstractions so that tests do not need to manage framework wiring directly.
 
 ## Shared Infrastructure
 
-API and Web tests run as separate Playwright projects while sharing the same configuration, fixtures, test context and utilities.
+API and Web tests run as separate Playwright projects while sharing the same configuration, fixtures, test context, and utilities. This keeps both layers consistent without forcing them into the same execution path. Shared infrastructure exists to avoid duplicating common concerns such as configuration loading, HTTP access, auth handling, and reusable test data setup.
 
 ## Multi-Region Support
 
@@ -73,7 +73,7 @@ The active region is selected through configuration.
 REGION=eu
 ```
 
-Adding a new region only requires new configuration values. Test code remains unchanged.
+Region switching is handled through configuration and shared factories rather than test logic. Adding a new region only requires new configuration values. Test code remains unchanged.
 
 ## Running
 
@@ -86,9 +86,11 @@ npm run test:web
 npm run test:all
 ```
 
+API and Web can be executed independently for faster feedback, or together when full coverage is needed.
+
 ## Configuration
 
-Configuration is managed through `.env`.
+Configuration is managed through `.env` and environment overlays under `config/environments`. `AppConfigFactory` centralizes runtime values before tests start so the same configuration model is used across both API and Web layers.
 
 Typical settings:
 
@@ -103,8 +105,4 @@ Typical settings:
 
 ## Continuous Integration
 
-GitHub Actions supports running:
-
-- API tests
-- Web tests
-- Complete test suite
+GitHub Actions supports running API tests, Web tests, or both through a suite and region matrix. By default, `push` and `pull_request` run against the `eu` region, while `workflow_dispatch` allows broader execution by suite or region when needed.
