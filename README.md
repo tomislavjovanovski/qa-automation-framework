@@ -53,9 +53,7 @@ The repository is organized so that:
 - `src/shared/` provides shared infrastructure used by both API and Web tests.
 - `src/core/` contains the framework backbone such as config, auth, and HTTP handling.
 
-## How Tests Use the Source Tree
-
-The test files in `tests/` are intentionally thin. They describe scenarios, but the reusable logic lives under `src/`.
+The test files in `tests/` are intentionally thin. They describe scenarios, while the reusable logic lives under `src/`.
 
 - `tests/api/*` contains API scenarios. These tests typically import from `src/api/` for request builders and schemas, and from `src/shared/` for fixtures and test data.
 - `tests/web/*` contains Web scenarios. These tests typically import from `src/web/` for pages, components, flows, and from `src/shared/` for fixtures and shared helpers.
@@ -133,13 +131,6 @@ The config loader supports layering:
 CI or shell environment variables still win over file-based values.
 
 The default `.env` and example files are prefilled with the Firefly demo host to make startup easier.
-
-## Add A New Region
-
-1. Copy one of the files under `config/environments/*.env.example`
-2. Create a new profile such as `config/environments/ca.env`
-3. Set `REGION=ca` and provide URLs and credentials
-4. Run the same tests with no code changes
 
 ## Design Notes
 
