@@ -1,0 +1,25 @@
+{
+  "name": "qa-automation-framework",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Enterprise-grade Playwright + TypeScript automation framework for API and Web testing.",
+  "scripts": {
+    "test:all": "playwright test -c playwright.config.ts",
+    "test:api": "playwright test -c playwright.api.config.ts",
+    "test:web": "playwright test -c playwright.web.config.ts",
+    "test:all:headed": "playwright test -c playwright.config.ts --headed",
+    "test:api:debug": "playwright test -c playwright.api.config.ts --debug",
+    "test:web:debug": "playwright test -c playwright.web.config.ts --debug",
+    "lint:types": "tsc --noEmit",
+    "report:open": "playwright show-report"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.0.3",
+    "@playwright/test": "^1.54.1",
+    "@types/node": "^24.0.10",
+    "dotenv": "^16.4.5",
+    "typescript": "^5.8.3",
+    "zod": "^3.24.1"
+  }
+}
+

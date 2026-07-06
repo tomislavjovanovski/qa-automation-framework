@@ -1,0 +1,103 @@
+name: Playwright CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Suite to execute
+        required: true
+        default: all
+        type: choice
+        options:
+          - api
+          - web
+          - all
+      region:
+        description: Region to execute
+        required: true
+        default: all
+        type: string
+
+jobs:
+  discover-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      suites: ${{ steps.matrix.outputs.suites }}
+      regions: ${{ steps.matrix.outputs.regions }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: matrix
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.suite }}" != "all" ]; then
+            suites_json=$(printf '["%s"]' "${{ github.event.inputs.suite }}")
+          else
+            suites_json='["api","web"]'
+          fi
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.region }}" != "all" ]; then
+            regions_json=$(printf '["%s"]' "${{ github.event.inputs.region }}")
+          elif [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "pull_request" ]; then
+            regions_json='["eu"]'
+          else
+            regions_json=$(find config/regions -maxdepth 1 -type f -name '*.json' -printf '%f\n' | sed 's/.json$//' | jq -R -s -c 'split("\n")[:-1]')
+          fi
+
+          echo "suites=${suites_json}" >> "$GITHUB_OUTPUT"
+          echo "regions=${regions_json}" >> "$GITHUB_OUTPUT"
+
+  test:
+    needs: discover-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: ${{ fromJson(needs.discover-matrix.outputs.suites) }}
+        region: ${{ fromJson(needs.discover-matrix.outputs.regions) }}
+    name: ${{ matrix.suite }}-${{ matrix.region }}
+    env:
+      EXECUTION_ENV: ci
+      BASE_URL: ${{ vars[format('BASE_URL_{0}', matrix.region)] || vars.BASE_URL }}
+      API_URL: ${{ vars[format('API_URL_{0}', matrix.region)] || vars.API_URL }}
+      REGION: ${{ matrix.region }}
+      API_AUTH_MODE: none
+      HEADLESS: "true"
+      WORKERS: 2
+      CI_WORKERS: 2
+      RETRIES: 1
+      TEST_TIMEOUT_MS: 60000
+      EXPECT_TIMEOUT_MS: 10000
+      NAVIGATION_TIMEOUT_MS: 30000
+      TRACE_MODE: on-first-retry
+      SCREENSHOT_MODE: only-on-failure
+      VIDEO_MODE: retain-on-failure
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run suite
+        run: npm run test:${{ matrix.suite }}
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.suite }}-${{ matrix.region }}
+          path: |
+            playwright-report
+            test-results

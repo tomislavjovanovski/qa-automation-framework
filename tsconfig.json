@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["ES2022", "DOM"],
+    "types": ["node", "@playwright/test"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@api/*": ["src/api/*"],
+      "@core/*": ["src/core/*"],
+      "@shared/*": ["src/shared/*"],
+      "@web/*": ["src/web/*"]
+    }
+  },
+  "include": [
+    "config/**/*.ts",
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "playwright.config.ts",
+    "playwright.api.config.ts",
+    "playwright.web.config.ts"
+  ]
+}
+

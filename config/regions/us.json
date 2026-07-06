@@ -1,0 +1,25 @@
+{
+  "code": "us",
+  "locale": "en-US",
+  "currency": "USD",
+  "timeZone": "America/New_York",
+  "api": {
+    "pathPrefix": "/",
+    "defaultHeaders": {
+      "x-region": "us"
+    },
+    "auth": {
+      "strategy": "client-credentials",
+      "clientIdEnvKey": "US_API_CLIENT_ID",
+      "clientSecretEnvKey": "US_API_CLIENT_SECRET",
+      "scope": "accounts.read accounts.write payments.write"
+    }
+  },
+  "web": {
+    "pathPrefix": "/"
+  },
+  "users": {
+    "retailUsernameEnvKey": "US_WEB_USERNAME",
+    "retailPasswordEnvKey": "US_WEB_PASSWORD"
+  }
+}
