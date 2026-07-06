@@ -26,11 +26,11 @@ test.describe("Accounts API contract coverage", () => {
     `${TEST_TAGS.api} ${TEST_TAGS.edge} ${TEST_TAGS.idempotency} replays payment safely`,
     async ({ apiContext }) => {
       const paymentRequest = {
-        sourceAccountId: "demo-source",
-        destinationAccountId: "demo-destination",
-        amount: 25,
-        currency: "EUR",
-        idempotencyKey: `payment-${Date.now()}`
+        sourceAccountId: apiContext.config.runtime.paymentSourceAccountId ?? "demo-source",
+        destinationAccountId: apiContext.config.runtime.paymentDestinationAccountId ?? "demo-destination",
+        amount: apiContext.config.runtime.paymentAmount ?? 25,
+        currency: apiContext.config.runtime.paymentCurrency ?? "EUR",
+        idempotencyKey: `${apiContext.config.runtime.paymentIdempotencyKeyPrefix ?? "payment"}-${Date.now()}`
       };
 
       try {

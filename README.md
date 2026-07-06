@@ -37,7 +37,7 @@ Playwright + TypeScript framework for API and Web testing with shared infrastruc
 |-- tests/
 |   |-- api/                  # Thin API test scenarios; describe behavior and delegate to src/api
 |   `-- web/                  # Thin Web test scenarios; describe behavior and delegate to src/web
-|-- .env.example             # Example environment configuration
+|-- .env                     # Local runtime configuration for the framework
 |-- package.json             # Scripts and dependencies
 |-- playwright.api.config.ts # API-only Playwright config entrypoint
 |-- playwright.config.ts     # Combined Playwright config entrypoint
@@ -84,7 +84,7 @@ test.describe("Retail login journey with API orchestration", () => {
 
 ## Configuration
 
-The main runtime settings are read from the local [.env](.env) file. The example file [.env.example](.env.example) is only a reference template for the expected variables.
+The main runtime settings are read from the local [.env](.env) file. It is the single source of truth for local execution and includes the comments needed to understand each setting.
 
 - `BASE_URL`: web application URL used by browser tests
 - `API_URL`: API base URL used by API tests

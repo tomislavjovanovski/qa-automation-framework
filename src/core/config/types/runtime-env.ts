@@ -11,6 +11,11 @@ export interface RuntimeEnv {
   apiClientSecret?: string;
   webUsername?: string;
   webPassword?: string;
+  paymentSourceAccountId?: string;
+  paymentDestinationAccountId?: string;
+  paymentAmount?: number;
+  paymentCurrency?: string;
+  paymentIdempotencyKeyPrefix?: string;
   headless: boolean;
   workers: number | string;
   ciWorkers: number | string;
