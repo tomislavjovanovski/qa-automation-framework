@@ -56,6 +56,56 @@ Playwright + TypeScript framework for API and Web testing with shared infrastruc
 - `config/environments`: environment and region profile examples
 - `.github/workflows`: CI pipeline
 
+## How Tests Use the Source Tree
+
+The test files in `tests/` are intentionally thin. They describe scenarios, but the reusable logic lives under `src/`.
+
+- `tests/api/*` contains API scenarios. These tests typically import from `src/api/` for request builders and schemas, and from `src/shared/` for fixtures and test data.
+- `tests/web/*` contains Web scenarios. These tests typically import from `src/web/` for pages, components, flows, and from `src/shared/` for fixtures and shared helpers.
+- `src/core/` provides the framework plumbing such as config loading, auth setup, and HTTP client creation.
+- `src/shared/` is the shared layer used by both API and Web tests so the same fixtures, tags, and factories can be reused.
+
+A good way to think about the structure is:
+
+- `tests/` = business scenarios
+- `src/api/` = API implementation details
+- `src/web/` = browser automation implementation details
+- `src/shared/` = shared infrastructure used by both
+- `src/core/` = framework backbone
+
+### Example: reading a typical test file
+
+The example below shows the intended pattern. The test itself is a scenario description, while the reusable implementation lives in the `src/` folders.
+
+```ts
+import { webTest as test } from "../../../src/shared/fixtures/web.fixture";
+import { TEST_TAGS } from "../../../src/shared/constants/test-tags";
+
+test.describe("Retail login journey with API orchestration", () => {
+  test(
+    `${TEST_TAGS.web} ${TEST_TAGS.happyPath} authenticates user after API setup`,
+    async ({ webContext }) => {
+      // The shared fixture supplies the web context.
+      // Real implementation would call flows/pages from src/web/.
+      void webContext;
+    }
+  );
+
+  test(`${TEST_TAGS.web} ${TEST_TAGS.negative} blocks invalid credentials`, async ({ webContext }) => {
+    // This is a placeholder scenario showing the expected structure.
+    void webContext;
+  });
+});
+```
+
+### What to look for when onboarding
+
+1. Start in `tests/` to understand the business goal of the scenario.
+2. Follow the imports to see which reusable layer is being used.
+3. If the test uses UI behavior, inspect `src/web/`.
+4. If the test uses API behavior, inspect `src/api/`.
+5. If it needs shared setup or data, inspect `src/shared/`.
+
 ## Run Locally
 
 1. Install dependencies with `npm ci`
