@@ -106,3 +106,4 @@ Typical settings:
 ## Continuous Integration
 
 GitHub Actions supports running API tests, Web tests, or both through a suite and region matrix. By default, `push` and `pull_request` run against the `eu` region, while `workflow_dispatch` allows broader execution by suite or region when needed.
+
