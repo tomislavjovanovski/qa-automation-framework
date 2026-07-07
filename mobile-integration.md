@@ -2,8 +2,6 @@
 
 ## Overview
 
-The current repository does not yet implement a mobile automation layer. `src/mobile/` and `tests/mobile/` exist, but they are currently empty, and there is no mobile fixture, mobile context, mobile script, or mobile CI job.
-
 This document describes how mobile would fit into the existing framework without changing the current architecture.
 
 ## How Mobile Fits the Current Framework
